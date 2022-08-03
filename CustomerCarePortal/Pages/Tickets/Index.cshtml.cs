@@ -35,7 +35,11 @@ namespace CustomerCarePortal.Pages.Tickets
                 if (User.IsInRole("Administrator"))
                 {
                     flag = 1;
-                    Tickets = await _context.Tickets.ToListAsync();
+                    Tickets = await _context.Tickets
+                        .Include(t => t.TeamAssigned)
+                        .Include(t => t.AgentAssigned)
+                        .OrderByDescending(t => t.Id)
+                        .ToListAsync();
                 }
                 else if (User.IsInRole("TeamManager"))
                 {
@@ -44,11 +48,21 @@ namespace CustomerCarePortal.Pages.Tickets
                     var agent = await _context.Agents.FirstOrDefaultAsync(a => a.Email.Equals(currentUser.Email));
                     if (agent is not null)
                     {
-                        var res = await _context.Tickets.FirstOrDefaultAsync(t => t.TeamAssigned.Id == agent.TeamId);
+                        var res = await _context.Tickets
+                            .Include(t => t.TeamAssigned)
+                            .Include(t => t.AgentAssigned)
+                            .Where(t => (t.TeamAssigned != null && t.TeamAssigned.Id == agent.TeamId))
+                            .Select(s => s)
+                            .OrderByDescending(t => t.Id)
+                            .ToListAsync();
                         if (res is not null)
-                            Tickets.Add(res);
+                        {
+                            foreach (var r in res)
+                            {
+                                Tickets.Add(r);
+                            }
+                        }
                     }
-
                 }
                 else if (User.IsInRole("Agent"))
                 {
@@ -59,7 +73,9 @@ namespace CustomerCarePortal.Pages.Tickets
                     {
                         var res = await _context.Tickets.FirstOrDefaultAsync(t => t.AgentAssigned == agent);
                         if (res is not null)
+                        {
                             Tickets.Add(res);
+                        }
                     }
                 }
             }

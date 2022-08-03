@@ -1,20 +1,30 @@
 using CustomerCarePortal.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Security.Claims;
 
 namespace CustomerCarePortal.Pages.Tickets
 {
     public class CreateModel : PageModel
     {
         private readonly CustomerCarePortal.Data.ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _um;
+        //This is flag to check whether user is loged in or not
+        public Boolean flag { get; set; } = false;
 
-        public CreateModel(CustomerCarePortal.Data.ApplicationDbContext context)
+        public CreateModel(CustomerCarePortal.Data.ApplicationDbContext context, UserManager<IdentityUser> um)
         {
+            _um = um;
             _context = context;
         }
 
         public IActionResult OnGet()
         {
+            if (User.Identity !=null && User.Identity.IsAuthenticated)
+            {
+                flag = true;
+            }
             return Page();
         }
 
@@ -57,7 +67,8 @@ namespace CustomerCarePortal.Pages.Tickets
             {
                 return str;
             }
-            else {
+            else
+            {
                 return GenerateId();
             }
         }

@@ -6,10 +6,9 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-<h1>Edit</h1>
+<h1 class="fs-1">Edit Department</h1>
 
-<h4>Department</h4>
-<hr />
+<br />
 <div class="row">
     <div class="col-md-4">
         <form method="post">
@@ -22,12 +21,12 @@
             </div>
             <div class="form-group">
                 <label class="control-label">Department Manager</label>
-                <select asp-for="Department.DepartmentManagerId" class="form-control" asp-items="ViewBag.DepartmentManagers"></select>
+                <select asp-for="Department.DepartmentManagerId" class="form-control form-select" asp-items="ViewBag.DepartmentManagers"></select>
                 <span asp-validation-for="Department.DepartmentManagerId" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
-                <input type="submit" value="Save" class="btn btn-success" />
-                <a class="btn btn-primary" asp-page="./Index">Back to List</a>
+                <input type="submit" value="Save" class="btn btn-outline-success" />
+                <a class="btn btn-outline-light" asp-page="./Index">Back to List</a>
             </div>
         </form>
     </div>

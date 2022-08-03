@@ -3,8 +3,7 @@
 @{
 }
 
-<h1>Edit</h1>
-<br />
+<h1 class="fs-1">Edit Ticket</h1>
 <br />
 
 <div class="row">
@@ -35,7 +34,7 @@
                             @if (@Model.Ticket.Workflow is not null)
                             {
                                 <text>@Model.Ticket.Workflow.Name</text>
-                                <p class="card-text"><b class="fw-bold">Crrent State:</b> @Model.Ticket.CurrentState.Name</p>
+                            <p class="card-text"><b class="fw-bold">Crrent State:</b> @Model.Ticket.CurrentState.Name</p>
                             }
                             else
                             {
@@ -49,11 +48,11 @@
                             <input type="hidden" asp-for="Ticket.Email" />
                             <input type="hidden" asp-for="Ticket.TeamAssigned.Id" />
                             <input type="hidden" asp-for="Ticket.CurrentStateId" />
-                            
+
                             <!-- Team Assigned-->
                             <div class="form-group">
                                 <label class="control-label">Assign Agent</label>
-                                <select asp-for="Ticket.AgentAssigned.Id" class="form-select w-50" asp-items="ViewBag.Agents"></select>
+                                <select asp-for="Ticket.AgentAssigned.Id" class="form-select  select w-50" asp-items="ViewBag.Agents"></select>
                                 <span asp-validation-for="Ticket.AgentAssigned.Id" class="text-danger"></span>
                             </div>
                             <!-- Workflow Assignment Section-->
@@ -62,15 +61,17 @@
                             {
                                 <div class="form-group">
                                     <label class="control-label">Attach Workflow</label>
-                                    <select asp-for="Ticket.WorkflowId" class="form-select w-50" asp-items="ViewBag.Workflows"></select>
+                                    <select asp-for="Ticket.WorkflowId" class="form-select select w-50" asp-items="ViewBag.Workflows"></select>
                                     <span asp-validation-for="Ticket.WorkflowId" class="text-danger"></span>
                                 </div>
-                            }else{
+                            }
+                            else
+                            {
                                 <input type="hidden" asp-for="Ticket.WorkflowId" />
                             }
                             <div class="form-group mt-3">
-                                <input type="submit" value="Save" class="btn btn-success" />
-                                <a class="btn btn-primary" asp-page="./Index">Back to List</a>
+                                <input type="submit" value="Save" class="btn btn-outline-success" />
+
                             </div>
                         </p>
                     </div>
@@ -82,7 +83,7 @@
     <div class="col-md-6 row">
         <div class="col-12 ">
             <h4>Edit History</h4>
-            <div class="card" style="width: 100%;overflow:scroll;">
+            <div class="card" style="width: 100%;overflow:scroll;height:300px;">
                 <ul class="list-group list-group-flush">
                     @if (@Model.Comments is not null)
                     {
@@ -98,8 +99,12 @@
                 <input type="hidden" asp-for="Ticket.History.Id" />
                 <label class="control-label">Enter Comment</label>
                 <input asp-for="comment.Description" class="form-control" />
-                <input type="submit" value="Add Comment" class="btn btn-success mt-1" />
+                <input type="submit" value="Add Comment" class="btn btn-outline-success mt-1" />
             </form>
         </div>
     </div>
+</div>
+
+<div>
+    <a class="btn btn-outline-light" asp-page="./Index">Back to List</a>
 </div>

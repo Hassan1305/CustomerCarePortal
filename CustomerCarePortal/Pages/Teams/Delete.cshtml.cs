@@ -30,7 +30,10 @@ namespace CustomerCarePortal.Pages.Teams
                 return NotFound();
             }
 
-            var team = await _context.Teams.FirstOrDefaultAsync(m => m.Id == id);
+            var team = await _context.Teams
+                .Include(t=>t.TeamManager)
+                .Include(t=>t.Department)
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (team == null)
             {

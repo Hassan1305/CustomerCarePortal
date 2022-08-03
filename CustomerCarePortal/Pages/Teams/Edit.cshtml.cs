@@ -79,6 +79,15 @@ namespace CustomerCarePortal.Pages.Teams
                         }
                     }
                 }
+                else //When first time manager is assigned
+                {
+                    var manager = await _context.Agents.FindAsync(managerId);
+                    if(manager is not null)
+                    {
+                        var managerUser = _context.Users.FirstOrDefault(u => u.Email.Equals(manager.Email));
+                        _um.AddToRoleAsync(managerUser, "TeamManager");
+                    }
+                }
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)

@@ -6,10 +6,9 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-<h1>Edit</h1>
+<h1 class="fs-1">Edit Workflow</h1>
 
-<h4>Workflow</h4>
-<hr />
+<br />
 <div class="row">
     <div class="col-md-5">
         <form class="border p-3 border-dark" method="post" asp-page-handler="UpdateWorkflow">
@@ -23,7 +22,7 @@
             </div>
             <div class="form-group">
                 <label class="control-label">Initial State</label>
-                <select asp-for="Workflow.IntialStateId" class="form-control">
+                <select asp-for="Workflow.IntialStateId" class="form-control form-select">
                     @if (@Model.Workflow.States is null || @Model.Workflow.States.Count == 0)
                     {
                         <option disabled readonly>No States Added yet</option>
@@ -47,15 +46,47 @@
                 </select>
             </div>
             <div class="form-group mt-3">
-                <input type="submit" value="Save" class="btn btn-success" />
-                <a asp-page="./Index" class="btn btn-primary">Back to List</a>
+                <input type="submit" value="Save" class="btn btn-outline-success" />
+                <a asp-page="./Index" class="btn btn-outline-light">Back to List</a>
             </div>
         </form>
     </div>
-    <div class="col-md-2"></div>
-    <!-- Here goes the State form-->
+</div>
 
-    <div class="col-md-4">
+<!--States section-->
+<div class="row" style="margin-left:15px;">
+    <h3>States In Workflow</h3>
+    <table class="col-12 table table-active table-hover">
+        <thead>
+            <tr>
+                <th>State Name</th>
+                <th>Transitions Attached</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (@Model.Workflow.States is not null)
+            {
+                @foreach (var state in @Model.Workflow.States)
+                {
+                    <tr>
+                        <td>@state.Name</td>
+                        <td>
+                            @if (@state.Transitions is not null)
+                            {
+                                @foreach (var trans in @state.Transitions)
+                                {
+                                    <text>@trans.Name</text>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<!-- Here goes the State form-->
+    <div class="col-12">
         <form class="border p-3 border-dark mt-3" method="post" asp-page-handler="AddState">
             <!-- Adding the State info here -->
             <h4>Add New State</h4>
@@ -65,12 +96,37 @@
                 <input asp-for="NewState.Name" class="form-control" />
             </div>
             <div class="form-group mt-3">
-                <input type="submit" value="Add State" class="btn btn-success" />
+                <input type="submit" value="Add State" class="btn btn-outline-success" />
             </div>
         </form>
     </div>
+    <!--Transitions section-->
+<div class="row" style="margin-left:15px;">
+    <h3>Transitions In Workflow</h3>
+    <table class="col-12 table table-active table-hover">
+        <thead>
+            <tr>
+                <th>Source State</th>
+                <th>Transition</th>
+                <th>Destination State</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (@Model.Transitions is not null)
+            {
+                @foreach (var tran in @Model.Transitions)
+                {
+                    <tr>
+                        <td>@tran.SourceState.Name</td>
+                        <td>@tran.Name</td>
+                        <td>@tran.DestinationState.Name</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
 </div>
-
+<!--Transition form-->
 <div class="row">
     <form class="col-12 border p-3 border-dark my-3" method="post" asp-page-handler="AddTransition">
         <h4>Add New Transition</h4>
@@ -78,7 +134,7 @@
             <input type="hidden" asp-for="Workflow.Id" />
             <!--Source Transition-->
             <label asp-for="NewTransition.SourceState" class="control-label"></label>
-            <select asp-for="NewTransition.SourceStateId" class="form-control">
+            <select asp-for="NewTransition.SourceStateId" class=" form-select form-control">
                 @if (@Model.Workflow.States is not null)
                 {
                     @if (@Model.Workflow.States.Count == 0)
@@ -99,7 +155,7 @@
             <!-- Destination State -->
 
             <label asp-for="NewTransition.DestinationState" class="control-label"></label>
-            <select asp-for="NewTransition.DestinationStateId" class="form-control">
+            <select asp-for="NewTransition.DestinationStateId" class="form-control form-select">
                 @if (@Model.Workflow.States is not null)
                 {
                     @if (@Model.Workflow.States.Count == 0)
@@ -126,39 +182,13 @@
                 <input asp-for="NewTransition.Name" class="form-control" />
             </div>
             <div class="form-group mt-3">
-                <input type="submit" value="Add Transition" class="btn btn-success" />
+                <input type="submit" value="Add Transition" class="btn btn-outline-success" />
             </div>
         </div>
     </form>
 </div>
-
-<div class="row">
-    <h3>Transitions In Workflow</h3>
-    <table class="col-12 table table-striped table-hover">
-        <thead>
-            <tr>
-                <th>Source State</th>
-                <th>Transition</th>
-                <th>Destination State</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (@Model.Transitions is not null)
-            {
-                @foreach (var tran in @Model.Transitions)
-                {
-                    <tr>
-                        <td>@tran.SourceState.Name</td>
-                        <td>@tran.Name</td>
-                        <td>@tran.DestinationState.Name</td>
-                    </tr>
-                }
-            }
-        </tbody>
-    </table>
-</div>
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-    }
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}

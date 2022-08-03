@@ -25,12 +25,21 @@ namespace CustomerCarePortal.Pages.Agents
         }
         public void OnGetAsync()
         {
-            AllUsersInSystem =  _usermanager.Users.ToList();
+            var agents = _db.Agents.ToList();
+            var users =  _usermanager.Users.ToList();
+            AllUsersInSystem = (from u in users 
+                               join a in agents on u.Email equals a.Email
+                                where !users.Contains(u)
+                               select u).ToList();
             AllTeamsInSystem = _db.Teams.ToList();
         }
 
         public async Task<IActionResult> OnPostCreateAgent()
         {
+            if(UserId is null || TeamId == 0)
+            {
+                return Redirect("/Agents/Create");
+            }
             var user = _usermanager.Users.First(user => user.Id == UserId);
             var team = _db.Teams.FirstOrDefault(team => team.Id == TeamId);
             if (user is not null && team is not null)

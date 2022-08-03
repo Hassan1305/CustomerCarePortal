@@ -6,8 +6,8 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
-
+<h1 class="fs-1">Details</h1>
+<br />
 <div>
     <h4>Workflow</h4>
     <hr />
@@ -22,11 +22,80 @@
             @Html.DisplayNameFor(model => model.Workflow.IntialStateId)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Workflow.IntialStateId)
+            @if(@Model.InitialState is not null)
+            {
+                @Html.DisplayName(@Model.InitialState.Name.ToString())
+            }else{
+                @Html.DisplayName("None")
+            }
         </dd>
     </dl>
 </div>
+
+<div class="row">
+    <h3>States In Workflow</h3>
+    <table class="col-12 table table-active table-hover">
+        <thead>
+            <tr>
+                <th>State Name</th>
+                <th>Transitions Attached</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (@Model.States is not null)
+            {
+                @foreach (var state in @Model.States)
+                {
+                    <tr>
+                        <td>@state.Name</td>
+                        <td>
+                            @if (@state.Transitions is not null)
+                            {
+                                @foreach (var trans in @state.Transitions)
+                                {
+                                    <text>@trans.Name</text>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+@if(@Model.Transitions is not null ){
+    
+<div class="row">
+    <h3>Transitions In Workflow</h3>
+    <table class="col-12 table table-active table-hover">
+        <thead>
+            <tr>
+                <th>Source State</th>
+                <th>Transition</th>
+                <th>Destination State</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (@Model.Transitions is not null)
+            {
+                @foreach (var tran in @Model.Transitions)
+                {
+                    <tr>
+                        <td>@tran.SourceState.Name</td>
+                        <td>@tran.Name</td>
+                        <td>@tran.DestinationState.Name</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+}
+
 <div>
-    <a asp-page="./Edit" asp-route-id="@Model.Workflow?.Id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+    <a class="btn btn-outline-primary" asp-page="./Edit" asp-route-id="@Model.Workflow?.Id">Edit</a> |
+    <a class="btn btn-outline-light" asp-page="./Index">Back to List</a>
 </div>

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CustomerCarePortal.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using CustomerCarePortal.Data;
-using CustomerCarePortal.Models;
 
 namespace CustomerCarePortal.Pages.Workflows
 {
@@ -21,6 +16,9 @@ namespace CustomerCarePortal.Pages.Workflows
         }
 
       public Workflow Workflow { get; set; } = default!; 
+      public List<Transition> Transitions { get; set; } = default!; 
+      public IList<State> States { get; set; } = default!; 
+      public State InitialState { get; set; } = default!; 
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -29,14 +27,35 @@ namespace CustomerCarePortal.Pages.Workflows
                 return NotFound();
             }
 
-            var workflow = await _context.Workflows.FirstOrDefaultAsync(m => m.Id == id);
+            var workflow = await _context.Workflows
+                .Include(w=>w.States)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (workflow == null)
             {
                 return NotFound();
             }
-            else 
+            else
             {
                 Workflow = workflow;
+                if (Workflow.States is not null)
+                {
+                    States = Workflow.States;
+                    Transitions = new List<Transition>();
+                    IList<Transition> transitions = await _context.Transitions.ToListAsync();
+                    foreach (State state in Workflow.States)
+                    {
+                        if(state.Id == workflow.IntialStateId) {
+                            InitialState = state;
+                        }
+                        foreach (Transition transition in transitions)
+                        {
+                            if (transition.SourceStateId == state.Id)
+                            {
+                                Transitions.Add(transition);
+                            }
+                        }
+                    }
+                }
             }
             return Page();
         }

@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using CustomerCarePortal.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using CustomerCarePortal.Data;
-using CustomerCarePortal.Models;
 
-namespace CustomerCarePortal.Pages.Departments
+namespace CustomerCarePortal.Pages.Tickets
 {
     [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Administrator")]
     public class DeleteModel : PageModel
@@ -21,42 +16,40 @@ namespace CustomerCarePortal.Pages.Departments
         }
 
         [BindProperty]
-      public Department Department { get; set; } = default!;
+        public Ticket Ticket { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Departments == null)
+            if (id == null || _context.Tickets == null)
             {
                 return NotFound();
             }
 
-            var department = await _context.Departments
-                .Include(d=>d.DepartmentManager)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var ticket = await _context.Tickets.FirstOrDefaultAsync(m => m.Id == id);
 
-            if (department == null)
+            if (ticket == null)
             {
                 return NotFound();
             }
-            else 
+            else
             {
-                Department = department;
+                Ticket = ticket;
             }
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null || _context.Departments == null)
+            if (id == null || _context.Tickets == null)
             {
                 return NotFound();
             }
-            var department = await _context.Departments.FindAsync(id);
+            var ticket = await _context.Tickets.FindAsync(id);
 
-            if (department != null)
+            if (ticket != null)
             {
-                Department = department;
-                _context.Departments.Remove(Department);
+                Ticket = ticket;
+                _context.Tickets.Remove(Ticket);
                 await _context.SaveChangesAsync();
             }
 

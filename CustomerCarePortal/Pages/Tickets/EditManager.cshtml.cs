@@ -73,17 +73,27 @@ namespace CustomerCarePortal.Pages.Tickets
                 var oldAgent = await _db.Agents
                     .Where(a => a.TicketAssinged != null && a.TicketAssinged.Id == Ticket.Id)
                     .Select(s => s).ToListAsync();
-                if (oldAgent is not null && Ticket.AgentAssigned is not null)
+                if (Ticket.AgentAssigned is not null)
                 {
-                    Agent res = oldAgent[0];
-                    //If the agent is changed then update
-                    if (res.Id != Ticket.AgentAssigned.Id)
+                    if (oldAgent.Count > 0)
                     {
-                        res.TicketAssinged = null;
-                        _db.Agents.Update(res);
+                        Agent res = oldAgent[0];
+                        //If the agent is changed then update
+                        if (res.Id != Ticket.AgentAssigned.Id)
+                        {
+                            res.TicketAssinged = null;
+                            _db.Agents.Update(res);
+                        }
+                    }
+                    
+
+                    {
+                        if (Ticket.AgentAssigned.Id != 0)
+                        {
+                            Ticket.AgentAssigned = _db.Agents.FirstOrDefault(a => a.Id == Ticket.AgentAssigned.Id);
+                        }
                     }
                 }
-                Ticket.AgentAssigned = _db.Agents.FirstOrDefault(a => a.Id == Ticket.AgentAssigned.Id);
                 //Attaching workflow
                 Ticket.Workflow = _db.Workflows.FirstOrDefault(w => w.Id == Ticket.WorkflowId);
                 if (Ticket.CurrentStateId is not null)

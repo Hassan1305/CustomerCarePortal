@@ -2,11 +2,9 @@
 @model CustomerCarePortal.Pages.Tickets.IndexModel
 @{
 }
-<h1>Index</h1>
-
-<h1>All Tickets</h1>
-
-<table class="table table-hover">
+<h1 class="fs-1">All Tickets</h1>
+<br />
+<table class="table-active table-hover">
     <thead>
         <tr>
             <th>
@@ -25,24 +23,73 @@
         {
             @foreach (var item in @Model.Tickets)
             {
-                @if (@Model.flag == 1 && @item.TeamAssigned == null)
+                <!--If it's admin and team is not assingned yet that means new arrival-->
+                @if (@Model.flag == 1)
                 {
-                    <tr class="bg-secondary bg-opacity-25">
-                        <td >
-                            @Html.DisplayFor(modelItem => item.Email)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Description)
-                        </td>
-                        <td>
-                            <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                            <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                            <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-                        </td>
-                    </tr>
+                    @if (@item.TeamAssigned is null)
+                    {
+                        <tr class="bg-warning bg-opacity-25">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td style="width:30%;">
+                                <a class="btn btn-outline-primary" asp-page="./Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i>&nbsp; Edit</a>&nbsp;
+                                <a class="btn btn-outline-danger" asp-page="./Delete" asp-route-id="@item.Id"><i class="bi bi-trash3"></i>&nbsp; Delete</a>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td style="width:30%;">
+                                <a class="btn btn-outline-primary" asp-page="./Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i>&nbsp; Edit</a>&nbsp;
+                                <a class="btn btn-outline-danger" asp-page="./Delete" asp-route-id="@item.Id"><i class="bi bi-trash3"></i>&nbsp; Delete</a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else if (@Model.flag == 2)
+                {
+                    <!-- If it's team manager and agent  is not assigned yet that means new arrival-->
+                    @if (@item.AgentAssigned is null)
+                    {
+                        <tr class="bg-warning bg-opacity-25">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td style="width:30%;">
+                                <a class="btn btn-outline-primary" asp-page="./Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i>&nbsp; Edit</a>&nbsp;
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td style="width:30%;">
+                                <a class="btn btn-outline-primary" asp-page="./Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i>&nbsp; Edit</a>&nbsp;
+                            </td>
+                        </tr>
+                    }
                 }
                 else
-
                 {
                     <tr>
                         <td>
@@ -51,21 +98,17 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.Description)
                         </td>
-                        <td>
-                            <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                            <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                            <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                        <td style="width:30%;">
+                            <a class="btn btn-outline-primary" asp-page="./Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i>&nbsp; Edit</a>&nbsp;
                         </td>
                     </tr>
                 }
-
             }
-
         }
         else
         {
             <tr>
-                <td class="h3 text-secondary">
+                <td class="fs-3 text-success">
                     No Work Yet Have some Coffee :)
                 </td>
             </tr>

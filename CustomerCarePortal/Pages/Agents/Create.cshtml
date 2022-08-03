@@ -4,11 +4,13 @@
     ViewData["Title"] = "Create Agent";
 }
 
+<div class="blockquote fs-1">Create New Agent</div>
+
 <div class="row border-1 ">
     <form class="col-12 row border border-dark rounded p-3" asp-page-handler="CreateAgent">
         <div class="row col-md-5">
             <div class="h4">Select User: </div>
-            <select asp-for="UserId">
+            <select class="form-select" asp-for="UserId">
                 @foreach (var user in @Model.AllUsersInSystem)
                 {
                     <option value="@user.Id">@user.UserName</option>
@@ -18,7 +20,7 @@
         <div class="col-md-1"></div>
         <div class="row col-md-5">
             <div class="h4">Select Team for Agent: </div>
-            <select asp-for="TeamId">
+            <select class="form-select" asp-for="TeamId">
                 @foreach (var team in @Model.AllTeamsInSystem)
                 {
                     <option value="@team.Id">@team.Name</option>
@@ -27,7 +29,7 @@
         </div>
         <div class="row col-md-12 mt-2">
             <div class="col-5"></div>
-            <button type="submit" class="btn btn-primary col-1" value="submit">Submit</button>
+            <button type="submit" class="btn btn-outline-success col-1" value="submit">Submit</button>
         </div>
     </form>
 </div>
